@@ -7,12 +7,9 @@ from firebase import firebase
 import time
 
 TRAIN_ID = 10011
-CAR_ID = 7
-CAR_NUMBER = 0
+CAR_ID = 1
 
 STATION_LIST = [0,1,2,3]
-
-print(firebase)
 
 firebase = firebase.FirebaseApplication('https://metronome-nyc.firebaseio.com', None)
 
@@ -41,7 +38,7 @@ def highlight_faces(image, faces, output_filename):
     im.save(output_filename)
 
 takephoto()
-static_index = 1
+station_index = 1
 
 with open('image.jpg', 'rb') as image:
     faces = detect_face(image, 50)
