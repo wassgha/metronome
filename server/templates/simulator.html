@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Metronome Control</title>
-    <style>
+<html lang="en">
+<head>
+  <title>Metronome Controller</title>
+  <style>
     button {
         padding: 10px;
         border-radius: 6px;
@@ -69,29 +68,42 @@
 
     .car.first .car-fill {
     }
-    </style>
-  </head>
-  <body>
-    <div class="train-container">
-      <div class="train">
-        <div class="car first">
-          <div class="car-fill danger" style="height:70%;">
-          </div>
+  </style>
+</head>
+<body>
+
+  <div class="train-container">
+    <div class="train">
+      <div class="car first">
+        <div class="car-fill danger" style="height:70%;">
         </div>
-        <div class="car">
-          <div class="car-fill" style="height:20%;">
-          </div>
+      </div>
+      <div class="car">
+        <div class="car-fill" style="height:20%;">
         </div>
-        <div class="car">
-          <div class="car-fill warning" style="height:50%;">
-          </div>
+      </div>
+      <div class="car">
+        <div class="car-fill warning" style="height:50%;">
         </div>
-        <div class="car">
-          <div class="car-fill" style="height:30%;">
-          </div>
+      </div>
+      <div class="car">
+        <div class="car-fill" style="height:30%;">
         </div>
       </div>
     </div>
-    <button>Simulate doors closing</button>
-  </body>
+  </div>
+  <button id="trigger-camera-button">Simulate doors closing</button>
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+  <script type="text/javascript">
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    $('#trigger-camera-button').click(function() {
+      console.log("Trigger camera");
+      socket.emit('trigger_camera');
+    });
+  </script>
+
+</body>
 </html>

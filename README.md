@@ -8,4 +8,6 @@ Install the following python requirements (you can use virtualenv):
 ```
 sudo pip install requests
 sudo pip install python-firebase
+sudo pip install flask
+sudo pip install flask_socketio
 ```
