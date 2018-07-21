@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Metronome Control</title>
+    <style>
+    button {
+        padding: 10px;
+        border-radius: 6px;
+        background: white;
+        border: 1px solid gray;
+        text-transform: uppercase;
+        font-size: 16px;
+        font-family: Roboto, Helvetica, sans-serif;
+        padding-left: 20px;
+        padding-right: 20px;
+        margin: 20px;
+    }
+
+    body {
+        margin: 0px;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .train-container {flex: 1;display: flex;margin: 20px;justify-content: center;}
+
+    .train {
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .car {
+        background: #d9d9d9;
+        height: 100px;
+        flex: 1;
+        margin: 10px;
+        border-radius: 12px;
+        display: flex;
+        flex-direction:  column;
+        justify-content: flex-end;
+        overflow: hidden;
+        max-width: 160px;
+    }
+
+    .car.first {
+        border-top-left-radius: 80%;
+        flex: 1.6;
+    }
+
+    .car .car-fill {
+        background: #8BC34A;
+        border-radius: 12px;
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
+    }
+
+    .car .car-fill.danger {
+        background: #d94859;
+    }
+
+    .car .car-fill.warning {
+        background: #FFC107;
+    }
+
+    .car.first .car-fill {
+    }
+    </style>
+  </head>
+  <body>
+    <div class="train-container">
+      <div class="train">
+        <div class="car first">
+          <div class="car-fill danger" style="height:70%;">
+          </div>
+        </div>
+        <div class="car">
+          <div class="car-fill" style="height:20%;">
+          </div>
+        </div>
+        <div class="car">
+          <div class="car-fill warning" style="height:50%;">
+          </div>
+        </div>
+        <div class="car">
+          <div class="car-fill" style="height:30%;">
+          </div>
+        </div>
+      </div>
+    </div>
+    <button>Simulate doors closing</button>
+  </body>
+</html>
