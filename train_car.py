@@ -20,7 +20,7 @@ wav = wave.open(StringIO.StringIO(wavs))
 SERVER = '127.0.0.1'
 PORT = 5000
 TRAIN_ID = 10011
-CAR_ID = 1
+CAR_ID = 0
 
 STATION_LIST = [0,1,2,3]
 
@@ -101,7 +101,7 @@ def on_triggerCamera(*args):
 
         result = firebase.post('/history', train_car)
         print result
-        station_index = (station_index + 1) % 4
+        # station_index = (station_index + 1) % 4
         print('Moving to station ' + str(station_index))
 
 print('Client is running, listening for commands')
