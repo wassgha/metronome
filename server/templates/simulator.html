@@ -72,27 +72,29 @@
 </head>
 <body>
 
+
+
   <div class="train-container">
     <div class="train">
       <div class="car first">
-        <div class="car-fill danger" style="height:70%;">
+        <div class="car-fill danger" style="height:0%;">
         </div>
       </div>
-      <div class="car">
-        <div class="car-fill" style="height:20%;">
-        </div>
-      </div>
-      <div class="car">
-        <div class="car-fill warning" style="height:50%;">
-        </div>
-      </div>
-      <div class="car">
-        <div class="car-fill" style="height:30%;">
-        </div>
-      </div>
+
+      {% for key, value in data.items() %}
+          <div class="car">
+            {% if value["how_full"] >= 3 %}
+                <div class="car-fill danger" style="height:{{ value["how_full"]*20 }}%;"></div>
+            {% elif value["how_full"] >= 2 %}
+                <div class="car-fill warning" style="height:{{ value["how_full"]*20 }}%;"></div>
+            {% else %}
+                <div class="car-fill" style="height:{{ value["how_full"]*20 }}%;"></div>
+            {% endif %}
+          </div>
+      {% endfor %}
     </div>
   </div>
-  <button id="trigger-camera-button">Simulate doors closing</button>
+  <!-- <button id="trigger-camera-button">Simulate doors closing</button> -->
 
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
