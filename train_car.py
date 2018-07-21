@@ -1,6 +1,10 @@
 import argparse
 import picamera
+import pyaudio
 import time
+import wave
+import StringIO
+from picotts import PicoTTS
 from google.cloud import vision
 from google.cloud.vision import types
 from PIL import Image, ImageDraw
@@ -9,6 +13,9 @@ from socketIO_client import SocketIO, LoggingNamespace
 
 firebase = firebase.FirebaseApplication('https://metronome-nyc.firebaseio.com', None)
 camera = picamera.PiCamera()
+picotts = PicoTTS()
+wavs = picotts.synth_wav('Stay clear of the closing doors, please.')
+wav = wave.open(StringIO.StringIO(wavs)) 
 
 SERVER = '127.0.0.1'
 PORT = 5000
@@ -18,6 +25,25 @@ CAR_ID = 1
 STATION_LIST = [0,1,2,3]
 
 station_index = 1
+
+def playSound():
+    global wav
+    p = pyaudio.PyAudio()  
+    stream = p.open(format = p.get_format_from_width(wav.getsampwidth()),  
+                    channels = wav.getnchannels(),  
+                    rate = wav.getframerate(),  
+                    output = True)  
+    data = wav.readframes(1024)  
+
+    while data:  
+        stream.write(data)  
+        data = wav.readframes(1024)  
+
+    stream.stop_stream()  
+    stream.close()  
+
+    p.terminate()  
+
 
 def takephoto():
     camera.capture('image.jpg')
@@ -56,6 +82,7 @@ def on_triggerCamera(*args):
     print('Detecting train riders...')
     takephoto()
     with open('image.jpg', 'rb') as image:
+        playSound()
         faces = detect_face(image, 50)
         print('Found {} face{}'.format(
             len(faces), '' if len(faces) == 1 else 's'))
@@ -77,6 +104,7 @@ def on_triggerCamera(*args):
         station_index = (station_index + 1) % 4
         print('Moving to station ' + str(station_index))
 
+print('Client is running, listening for commands')
 socketIO = SocketIO(SERVER, PORT, LoggingNamespace)
 socketIO.on('connect', on_connect)
 socketIO.on('disconnect', on_disconnect)
