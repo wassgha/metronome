@@ -9,9 +9,13 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 @app.route('/')
-def simulator():
+def status():
     cars = get_most_recent_cars()
-    return render_template('simulator.html', data = cars)
+    return render_template('status.html', data = cars)
+
+@app.route('/simulator')
+def simulator():
+    return render_template('simulator.html')
 
 def get_most_recent_cars():
     cars = {}

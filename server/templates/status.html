@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Metronome Controller</title>
+  <style>
+    button {
+        padding: 10px;
+        border-radius: 6px;
+        background: white;
+        border: 1px solid gray;
+        text-transform: uppercase;
+        font-size: 16px;
+        font-family: Roboto, Helvetica, sans-serif;
+        padding-left: 20px;
+        padding-right: 20px;
+        margin: 20px;
+    }
+
+    body {
+        background: #000;
+        margin: 0px;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        max-width: 600px;
+        margin: auto;
+    }
+
+    .train-container {
+      flex: 1;
+      display: flex;
+      margin: 20px;
+      justify-content: center;
+    }
+
+    .train {
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .car {
+        background: #333;
+        height: 100px;
+        flex: 1;
+        margin: 10px;
+        border-radius: 12px;
+        display: flex;
+        flex-direction:  column;
+        justify-content: flex-end;
+        overflow: hidden;
+        max-width: 160px;
+    }
+
+    .car.first {
+        border-top-left-radius: 80%;
+        flex: 1.6;
+    }
+
+    .car .car-fill {
+        background: #8BC34A;
+        border-radius: 12px;
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
+    }
+
+    .car .car-fill.danger {
+        background: #d94859;
+    }
+
+    .car .car-fill.warning {
+        background: #FFC107;
+    }
+
+    .car.first .car-fill {
+    }
+
+    .station {
+        font-size: 45px;
+        font-family: Helvetica;
+        color: white;
+        font-weight: 800;
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    .train-info {
+        display: flex;
+        padding: 20px;
+    }
+
+    .train-info .name {
+        border-radius: 50%;
+        background-color: #FCCC0A;
+        color: black;
+        padding: 10px;
+        font-size: 40px;
+        font-family: Helvetica;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+
+    }
+
+    .middle, .minutes {
+        display: flex;
+        flex-direction: column;
+        font-size: 20px;
+        font-family: Helvetica;
+        color: white;
+        font-weight: 800;
+        justify-content: center;
+        margin-left: 20px;
+        flex-grow: 1;
+    }
+
+    .middle .status {
+        font-weight: 300;
+    }
+
+    .minutes .number {
+        font-size: 60px;
+        text-align: center;
+        line-height: 50px;
+    }
+
+    .minutes .text {
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.64);
+    }
+
+    .minutes {
+        flex-grow: 0;
+    }
+  </style>
+</head>
+<body>
+
+
+  <div class="station">
+    Times Sq-42 St
+  </div>
+  <div class="train-info">
+    <div class="name">
+      Q
+    </div>
+    <div class="middle">
+      <span class="desc">
+        Downtown & Brooklyn
+      </span>
+      <span class="status">
+        Arriving. Seating space available
+      </span>
+    </div>
+    <div class="minutes">
+      <span class="number">
+        3
+      </span>
+      <span class="text">
+        minutes
+      </span>
+    </div>
+  </div>
+  <div class="train-container">
+    <div class="train">
+      <div class="car first">
+        <div class="car-fill danger" style="height:0%;">
+        </div>
+      </div>
+
+      {% for key, value in data.items() %}
+          <div class="car">
+            {% if value["how_full"] >= 3 %}
+                <div class="car-fill danger" style="height:{{ value["how_full"]*20 }}%;"></div>
+            {% elif value["how_full"] >= 2 %}
+                <div class="car-fill warning" style="height:{{ value["how_full"]*20 }}%;"></div>
+            {% else %}
+                <div class="car-fill" style="height:{{ value["how_full"]*20 }}%;"></div>
+            {% endif %}
+          </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+  <script type="text/javascript">
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    socket.on('update_ui_for_browser', function(){
+        console.log("Update UI javascript");
+        location.reload();
+    });
+  </script>
+
+</body>
+</html>

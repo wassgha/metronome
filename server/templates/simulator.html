@@ -22,78 +22,10 @@
         flex-direction: column;
         min-height: 100vh;
     }
-
-    .train-container {flex: 1;display: flex;margin: 20px;justify-content: center;}
-
-    .train {
-        display: flex;
-        flex-direction: row;
-        flex: 1;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .car {
-        background: #d9d9d9;
-        height: 100px;
-        flex: 1;
-        margin: 10px;
-        border-radius: 12px;
-        display: flex;
-        flex-direction:  column;
-        justify-content: flex-end;
-        overflow: hidden;
-        max-width: 160px;
-    }
-
-    .car.first {
-        border-top-left-radius: 80%;
-        flex: 1.6;
-    }
-
-    .car .car-fill {
-        background: #8BC34A;
-        border-radius: 12px;
-        border-top-left-radius: 0px;
-        border-top-right-radius: 0px;
-    }
-
-    .car .car-fill.danger {
-        background: #d94859;
-    }
-
-    .car .car-fill.warning {
-        background: #FFC107;
-    }
-
-    .car.first .car-fill {
-    }
   </style>
 </head>
 <body>
 
-
-
-  <div class="train-container">
-    <div class="train">
-      <div class="car first">
-        <div class="car-fill danger" style="height:0%;">
-        </div>
-      </div>
-
-      {% for key, value in data.items() %}
-          <div class="car">
-            {% if value["how_full"] >= 3 %}
-                <div class="car-fill danger" style="height:{{ value["how_full"]*20 }}%;"></div>
-            {% elif value["how_full"] >= 2 %}
-                <div class="car-fill warning" style="height:{{ value["how_full"]*20 }}%;"></div>
-            {% else %}
-                <div class="car-fill" style="height:{{ value["how_full"]*20 }}%;"></div>
-            {% endif %}
-          </div>
-      {% endfor %}
-    </div>
-  </div>
   <button id="trigger-camera-button">Simulate doors closing</button>
 
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -102,13 +34,8 @@
   <script type="text/javascript">
     var socket = io.connect('http://' + document.domain + ':' + location.port);
     $('#trigger-camera-button').click(function() {
-      console.log("Trigger camera");
       socket.emit('trigger_camera');
     });
-    socket.on('update_ui_for_browser', function(){
-        console.log("Update UI javascript");
-        location.reload();
-});
   </script>
 
 </body>
