@@ -1,2 +1,2 @@
-# metronome
-Improving the trainriding experience for all New Yorkers!
+# Metronome
+Improving the train riding experience for all New Yorkers!
