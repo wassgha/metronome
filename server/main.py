@@ -34,9 +34,14 @@ def get_most_recent_cars():
     return cars
 
 @socketio.on('trigger_camera')
-def test_message():
+def trigger_camera():
     print('trigger_camera received, broadcasting')
     emit('trigger_camera', broadcast=True)
+
+@socketio.on('update_ui')
+def update_ui():
+    print('update ui in main')
+    emit('update_ui_for_browser', broadcast=True)
 
 if __name__ == '__main__':
     PREV_STATION = 1

@@ -78,6 +78,7 @@ def on_reconnect():
     print('Reconnected')
 
 def on_triggerCamera(*args):
+    print(args)
     global station_index
     print('Detecting train riders...')
     takephoto()
@@ -103,6 +104,8 @@ def on_triggerCamera(*args):
         print result
         # station_index = (station_index + 1) % 4
         print('Moving to station ' + str(station_index))
+        socketIO.emit('update_ui')
+        print('Emitted update_ui')
 
 print('Client is running, listening for commands')
 socketIO = SocketIO(SERVER, PORT, LoggingNamespace)
@@ -110,5 +113,5 @@ socketIO.on('connect', on_connect)
 socketIO.on('disconnect', on_disconnect)
 socketIO.on('reconnect', on_reconnect)
 socketIO.on('trigger_camera', on_triggerCamera)
-socketIO.wait(seconds=100000)
+socketIO.wait(seconds=10000)
 

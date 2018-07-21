@@ -105,6 +105,10 @@
       console.log("Trigger camera");
       socket.emit('trigger_camera');
     });
+    socket.on('update_ui_for_browser', function(){
+        console.log("Update UI javascript");
+        location.reload();
+});
   </script>
 
 </body>
