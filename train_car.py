@@ -1,20 +1,25 @@
 import argparse
 import picamera
+import time
 from google.cloud import vision
 from google.cloud.vision import types
 from PIL import Image, ImageDraw
 from firebase import firebase
-import time
+from socketIO_client import SocketIO, LoggingNamespace
 
+firebase = firebase.FirebaseApplication('https://metronome-nyc.firebaseio.com', None)
+camera = picamera.PiCamera()
+
+SERVER = '127.0.0.1'
+PORT = 5000
 TRAIN_ID = 10011
 CAR_ID = 1
 
 STATION_LIST = [0,1,2,3]
 
-firebase = firebase.FirebaseApplication('https://metronome-nyc.firebaseio.com', None)
+station_index = 1
 
 def takephoto():
-    camera = picamera.PiCamera()
     camera.capture('image.jpg')
 
 def detect_face(face_file, max_results=4):
@@ -36,30 +41,46 @@ def highlight_faces(image, faces, output_filename):
         draw.line(box + [box[0]], width=5, fill='#00ff00')
 
     im.save(output_filename)
+    
+def on_connect():
+    print('Connected')
 
-takephoto()
-station_index = 1
+def on_disconnect():
+    print('Disconnected')
 
-with open('image.jpg', 'rb') as image:
-    faces = detect_face(image, 50)
-    print('Found {} face{}'.format(
-        len(faces), '' if len(faces) == 1 else 's'))
+def on_reconnect():
+    print('Reconnected')
 
-    print('Writing to file {}'.format('output.jpg'))
+def on_triggerCamera(*args):
+    global station_index
+    print('Detecting train riders...')
+    takephoto()
+    with open('image.jpg', 'rb') as image:
+        faces = detect_face(image, 50)
+        print('Found {} face{}'.format(
+            len(faces), '' if len(faces) == 1 else 's'))
 
-    image.seek(0)
-    # highlight_faces(image, faces, 'output.jpg')
-    train_car = {
-            'timestamp' : time.time(),
-            'train_id' : TRAIN_ID,
-            'car_id' : CAR_ID,
-            'how_full' : len(faces),
-            'station_id' : STATION_LIST[station_index]
-    }
+        print('Writing to file {}'.format('output.jpg'))
 
-    result = firebase.post('/history', train_car)
-    print result
+        image.seek(0)
+        # highlight_faces(image, faces, 'output.jpg')
+        train_car = {
+                'timestamp' : time.time(),
+                'train_id' : TRAIN_ID,
+                'car_id' : CAR_ID,
+                'how_full' : len(faces),
+                'station_id' : STATION_LIST[station_index]
+        }
 
+        result = firebase.post('/history', train_car)
+        print result
+        station_index = (station_index + 1) % 4
+        print('Moving to station ' + str(station_index))
 
-
+socketIO = SocketIO(SERVER, PORT, LoggingNamespace)
+socketIO.on('connect', on_connect)
+socketIO.on('disconnect', on_disconnect)
+socketIO.on('reconnect', on_reconnect)
+socketIO.on('trigger_camera', on_triggerCamera)
+socketIO.wait(seconds=100000)
 

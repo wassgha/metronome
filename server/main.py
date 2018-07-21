@@ -1,10 +1,11 @@
 from flask import Flask, render_template
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit
 import requests
 import firebase
 import json
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 @app.route('/')
@@ -31,6 +32,11 @@ def get_most_recent_cars():
         print (key, value)
 
     return cars
+
+@socketio.on('trigger_camera')
+def test_message():
+    print('trigger_camera received, broadcasting')
+    emit('trigger_camera', broadcast=True)
 
 if __name__ == '__main__':
     PREV_STATION = 1
