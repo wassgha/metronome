@@ -81,7 +81,6 @@ if __name__ == '__main__':
     firebase = firebase.FirebaseApplication('https://metronome-nyc.firebaseio.com', None)
     setUpPins()
     cars = get_most_recent_cars()
-    print(cars)
 
     for platform_num in range(NUM_PLATFORMS):
         num_people_detected = cars[platform_num]["how_full"]
